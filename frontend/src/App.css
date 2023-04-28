@@ -1,0 +1,86 @@
+* {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+#mainTitle {
+  font-size: 7vw;
+  font-weight: 600;
+}
+
+#examContainer {
+  border: solid 0.5em #432313;
+}
+
+#examTitle {
+  font-size: 5vw;
+  font-weight: 400;
+}
+
+#examDescription {
+  font-size: 4vw;
+}
+
+#examDate {
+  font-size: 3vw;
+}
+
+.filterContainer {
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+#filterTitle {
+  text-align: center;
+}
+
+.filterButton {
+  background-color: #6e3417;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.filterButton:hover {
+  background-color: #432313;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
