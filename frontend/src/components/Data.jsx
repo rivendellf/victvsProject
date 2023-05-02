@@ -23,13 +23,20 @@ export const Data = () => {
           return itemDate >= startDate && itemDate <= endDate;
         });
       }
-      setData(filteredData);
+      const sortedData = filteredData.sort(
+        (a, b) => new Date(a.Date) - new Date(b.Date)
+      );
+      setData(sortedData);
     });
   }, [startDate, endDate]);
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleString();
+    const [date, time] = dateString.split(" ");
+    const [day, month, year] = date.split("/");
+    const [hours, minutes, seconds] = time.split(":");
+    const isoString = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    const dateObj = new Date(isoString);
+    return dateObj.toLocaleString();
   };
 
   return (
@@ -39,6 +46,7 @@ export const Data = () => {
       <section class="filterContainer">
         <label id="filterTitle">Start Date:</label>
         <DatePicker
+          format="dd-MM-yyyy"
           selected={startDate}
           onChange={(date) => setStartDate(date)}
         />
@@ -46,7 +54,11 @@ export const Data = () => {
 
       <section class="filterContainer">
         <label id="filterTitle">End Date:</label>
-        <DatePicker selected={endDate} onChange={(date) => setEndDate(date)} />
+        <DatePicker
+          format="dd-MM-yyyy"
+          selected={endDate}
+          onChange={(date) => setEndDate(date)}
+        />
       </section>
 
       <button class="filterButton" onClick={handleFilter}>
