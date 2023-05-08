@@ -10,6 +10,24 @@ export const getTitles = () => {
   });
 };
 
+export const getCandidateName = () => {
+  return examInfoAPI.get("/getCandidateName").then((res) => {
+    return res.data;
+  });
+};
+
+export const getLocationList = () => {
+  return examInfoAPI.get("/getLocationList").then((res) => {
+    return res.data;
+  });
+};
+
+export const getDateList = () => {
+  return examInfoAPI.get("/getDateList").then((res) => {
+    return res.data;
+  });
+};
+
 export const getData = (startDate, endDate) => {
   const params = {};
 

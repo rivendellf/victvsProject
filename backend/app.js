@@ -18,17 +18,7 @@ app.get("/", (req, res) => {
 app.get("/api/getData", (req, res) => {
   fs.readFile("./dataJSON.json", "utf8", (err, data) => {
     const parsedData = JSON.parse(data);
-    const { startDate, endDate } = req.query;
-
-    let filteredData = parsedData;
-
-    if (startDate && endDate) {
-      filteredData = parsedData.filter(
-        (exam) => exam.Date >= startDate && exam.Date <= endDate
-      );
-    }
-
-    res.send(filteredData);
+    res.send(JSON.stringify(parsedData));
   });
 });
 
@@ -45,6 +35,33 @@ app.get("/api/getDescription", (req, res) => {
     const parsedData = JSON.parse(data);
     const description = parsedData.map((obj) => obj.Description);
     res.send(JSON.stringify(description));
+  });
+});
+
+app.get("/api/getCandidateName", (req, res) => {
+  fs.readFile("./dataJSON.json", "utf8", (err, data) => {
+    const parsedData = JSON.parse(data);
+    const candidateName = parsedData.map((obj) => obj.CandidateName);
+    const unique = [...new Set(candidateName)];
+    res.send(JSON.stringify(unique));
+  });
+});
+
+app.get("/api/getLocationList", (req, res) => {
+  fs.readFile("./dataJSON.json", "utf8", (err, data) => {
+    const parsedData = JSON.parse(data);
+    const location = parsedData.map((obj) => obj.LocationName);
+    const unique = [...new Set(location)];
+    res.send(JSON.stringify(unique));
+  });
+});
+
+app.get("/api/getDateList", (req, res) => {
+  fs.readFile("./dataJSON.json", "utf8", (err, data) => {
+    const parsedData = JSON.parse(data);
+    const date = parsedData.map((obj) => obj.Date);
+    const unique = [...new Set(date)];
+    res.send(JSON.stringify(unique));
   });
 });
 

@@ -1,78 +1,113 @@
 import { getData } from "../api";
+import { getCandidateName, getLocationList, getDateList } from "../api";
 import { useState, useEffect } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 
 export const Data = () => {
   const [data, setData] = useState([]);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
 
-  const handleFilter = () => {
-    getData(startDate, endDate).then((data) => {
-      setData(data);
-    });
-  };
+  const [candidateName, setCandidateName] = useState([]);
+  const [selectedCandidateName, setSelectedCandidateName] = useState("");
+
+  const [location, setLocation] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState("");
+
+  const [date, setDate] = useState([]);
+  const [selectedDate, setSelectedDate] = useState("");
 
   useEffect(() => {
     getData().then((data) => {
-      let filteredData = data;
-      if (startDate && endDate) {
-        filteredData = data.filter((item) => {
-          const itemDate = new Date(item.Date);
-          return itemDate >= startDate && itemDate <= endDate;
-        });
-      }
-      const sortedData = filteredData.sort(
-        (a, b) => new Date(a.Date) - new Date(b.Date)
-      );
-      setData(sortedData);
+      setData(data);
     });
-  }, [startDate, endDate]);
 
-  const formatDate = (dateString) => {
-    const [date, time] = dateString.split(" ");
-    const [day, month, year] = date.split("/");
-    const [hours, minutes, seconds] = time.split(":");
-    const isoString = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-    const dateObj = new Date(isoString);
-    return dateObj.toLocaleString();
+    getCandidateName().then((data) => {
+      setCandidateName(data);
+    });
+
+    getLocationList().then((data) => {
+      setLocation(data);
+    });
+
+    getDateList().then((data) => {
+      setDate(data);
+    });
+  }, []);
+
+  const handleSelectedCandidate = (event) => {
+    setSelectedCandidateName(event.target.value);
   };
+
+  const handleSelectedLocation = (event) => {
+    setSelectedLocation(event.target.value);
+  };
+
+  const handleSelectedDate = (event) => {
+    setSelectedDate(event.target.value);
+  };
+
+  const filteredData = data.filter((eachExam) => {
+    const candidateMatch =
+      selectedCandidateName === "" ||
+      eachExam.CandidateName === selectedCandidateName;
+    const locationMatch =
+      selectedLocation === "" || eachExam.LocationName === selectedLocation;
+    const dateMatch = selectedDate === "" || eachExam.Date === selectedDate;
+    return candidateMatch && locationMatch && dateMatch;
+  });
 
   return (
     <>
       <h1 id="mainTitle">Exam Information</h1>
 
-      <section class="filterContainer">
-        <label id="filterTitle">Start Date:</label>
-        <DatePicker
-          format="dd-MM-yyyy"
-          selected={startDate}
-          onChange={(date) => setStartDate(date)}
-        />
-      </section>
+      <p>
+        {" "}
+        <select id="select" onChange={handleSelectedCandidate}>
+          <option value="">All Candidates</option>
+          {candidateName.map((eachCandidate) => {
+            return (
+              <option key={eachCandidate} value={eachCandidate}>
+                {eachCandidate}
+              </option>
+            );
+          })}
+        </select>
+      </p>
 
-      <section class="filterContainer">
-        <label id="filterTitle">End Date:</label>
-        <DatePicker
-          format="dd-MM-yyyy"
-          selected={endDate}
-          onChange={(date) => setEndDate(date)}
-        />
-      </section>
+      <p>
+        {" "}
+        <select id="select" onChange={handleSelectedLocation}>
+          <option value="">All Locations</option>
+          {location.map((eachLocation) => {
+            return (
+              <option key={eachLocation} value={eachLocation}>
+                {eachLocation}
+              </option>
+            );
+          })}
+        </select>
+      </p>
 
-      <button class="filterButton" onClick={handleFilter}>
-        Filter
-      </button>
+      <p>
+        {" "}
+        <select id="select" onChange={handleSelectedDate}>
+          <option value="">All Dates</option>
+          {date.map((eachDate) => {
+            return (
+              <option key={eachDate} value={eachDate}>
+                {eachDate}
+              </option>
+            );
+          })}
+        </select>
+      </p>
 
-      {data.map((eachExam) => {
+      {filteredData.map((eachExam) => {
         return (
           <section id="examContainer" key={eachExam.id}>
             <p id="examTitle">{eachExam.Title}</p>
             <p id="examDescription">{eachExam.Description}</p>
             <p id="examLocation">{eachExam.LocationName}</p>
-
-            <p id="examDate">{formatDate(eachExam.Date)}</p>
+            <p id="examCandidate">{eachExam.CandidateName}</p>
+            <p id="examDate">{eachExam.Date}</p>
           </section>
         );
       })}
